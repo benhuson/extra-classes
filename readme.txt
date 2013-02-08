@@ -1,6 +1,6 @@
 === Extra Classes ===
 Contributors: husobj
-Tags: styles, css, menu, menus, navigation, selected
+Tags: styles, css, class, classes, menu, menus, nav, navigation, selected
 Requires at least: 3.1
 Tested up to: 3.5
 Stable tag: 0.1
