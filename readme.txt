@@ -46,9 +46,7 @@ If you can, please [fork the code](https://github.com/benhuson/extra-classes) an
 
 == Screenshots ==
 
-1. Login page perfectly mimicks the WordPress login.
-2. Integrates seamlessly into your WordPress reading settings in WordPress 3.5+.
-3. Integrates into your WordPress privacy settings in earlier versions of WordPress.
+None at present.
 
 == Changelog ==
 
