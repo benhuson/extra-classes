@@ -35,6 +35,9 @@ add_action( 'plugins_loaded', array( 'ExtraClasses', 'plugins_loaded' ) );
 
 class ExtraClasses {
 
+	/**
+	 * Plugins Loaded
+	 */
 	static function plugins_loaded() {
 		include_once( EXTRACLASSES_DIR . 'modules/body.php' );
 		include_once( EXTRACLASSES_DIR . 'modules/menu.php' );
@@ -43,13 +46,14 @@ class ExtraClasses {
 
 	/**
 	 * Menu Classes
+	 *
 	 * This helps menus decide what items should be selected when you get deeper into
 	 * the navigation. For example, show a page a selected if view an attachment page
 	 * of an image attached to that page.
 	 *
-	 * @param array $sorted_menu_items Sorted menu items.
-	 * @param array $args Array of arguments.
-	 * @return array Sorted menu items.
+	 * @param   array  $sorted_menu_items  Sorted menu items.
+	 * @param   array  $args               Array of arguments.
+	 * @return  array                      Sorted menu items.
 	 */
 	static function wp_nav_menu_objects( $sorted_menu_items, $args ) {
 		global $post;
@@ -63,8 +67,8 @@ class ExtraClasses {
 	/**
 	 * Single Post Menu Item Filters
 	 *
-	 * @param array $sorted_menu_items Menu items.
-	 * @return array Filtered menu items.
+	 * @param   array  $sorted_menu_items  Menu items.
+	 * @return  array                      Filtered menu items.
 	 */
 	static function _single_post_menu_item_filters( $sorted_menu_items ) {
 		global $post;
@@ -75,7 +79,7 @@ class ExtraClasses {
 			foreach ( $sorted_menu_items as $key => $val ) {
 				if ( $val->type == 'taxonomy' && has_term( $val->object_id, $val->object, $post->ID ) ) {
 					$classes = array( 'current-page-ancestor', 'current_page_ancestor', 'current-page-parent', 'current_page_parent', 'current-menu-ancestor', 'current-menu-parent' );
-					$sorted_menu_items[$key] = ExtraClasses::_add_classes_to_menu_item( $classes, $sorted_menu_items[$key] );
+					$sorted_menu_items[ $key ] = ExtraClasses::_add_classes_to_menu_item( $classes, $sorted_menu_items[ $key ] );
 
 					// Term Ancestors
 					$term_ancestors[$val->object] = get_ancestors( $val->object_id, $val->object );
@@ -89,7 +93,7 @@ class ExtraClasses {
 					foreach ( $term_ancestors as $tax => $t ) {
 						if ( in_array( $val->object_id, $t ) && $val->object == $tax ) {
 							$classes = array( 'current-page-ancestor', 'current_page_ancestor' );
-							$sorted_menu_items[$key] = ExtraClasses::_add_classes_to_menu_item( $classes, $sorted_menu_items[$key] );
+							$sorted_menu_items[$key] = ExtraClasses::_add_classes_to_menu_item( $classes, $sorted_menu_items[ $key ] );
 
 							// Menu Item Ancestors
 							$menu_item_ancestors = ExtraClasses::_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
@@ -106,8 +110,8 @@ class ExtraClasses {
 	/**
 	 * Attachment Page Menu Item Filters
 	 *
-	 * @param array $sorted_menu_items Menu items.
-	 * @return array Filtered menu items.
+	 * @param   array  $sorted_menu_items  Menu items.
+	 * @return  array                      Filtered menu items.
 	 */
 	static function _attachment_page_menu_item_filters( $sorted_menu_items ) {
 		global $post;
@@ -121,7 +125,7 @@ class ExtraClasses {
 					if ( $post->post_parent == $val->object_id ) {
 						$classes = array_merge( $classes, array( 'current-page-parent', 'current_page_parent', 'current-menu-ancestor', 'current-menu-parent' ) );
 					}
-					$sorted_menu_items[$key] = ExtraClasses::_add_classes_to_menu_item( $classes, $sorted_menu_items[$key] );
+					$sorted_menu_items[$key] = ExtraClasses::_add_classes_to_menu_item( $classes, $sorted_menu_items[ $key ] );
 
 					// Menu Item Ancestors
 					$menu_item_ancestors = ExtraClasses::_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
@@ -135,9 +139,9 @@ class ExtraClasses {
 	/**
 	 * Add Classes To Menu Item
 	 *
-	 * @param string|array $classes Class name(s).
-	 * @param object $menu_item Menu item object.
-	 * @return object Menu item.
+	 * @param   string|array  $classes    Class name(s).
+	 * @param   object        $menu_item  Menu item object.
+	 * @return  object                    Menu item.
 	 */
 	static function _add_classes_to_menu_item( $classes, $menu_item ) {
 		if ( is_array( $classes ) ) {
@@ -152,15 +156,15 @@ class ExtraClasses {
 	/**
 	 * Add Classes To Menu Items
 	 *
-	 * @param string|array $classes Class name(s).
-	 * @param array $menu_items Menu item objects.
-	 * @param array $menu_ids Menu item ids to which the class will be added.
-	 * @return array Menu items.
+	 * @param   string|array $classes     Class name(s).
+	 * @param   array        $menu_items  Menu item objects.
+	 * @param   array        $menu_ids    Menu item ids to which the class will be added.
+	 * @return  array                     Menu items.
 	 */
 	static function _add_classes_to_menu_items( $classes, $menu_items, $menu_ids ) {
 		foreach ( $menu_items as $key => $val ) {
 			if ( in_array( $val->ID, $menu_ids ) ) {
-				$menu_items[$key] = ExtraClasses::_add_classes_to_menu_item( $classes, $menu_items[$key] );
+				$menu_items[ $key ] = ExtraClasses::_add_classes_to_menu_item( $classes, $menu_items[ $key ] );
 			}
 		}
 		return $menu_items;
@@ -169,9 +173,9 @@ class ExtraClasses {
 	/**
 	 * Add Menu Item Ancestors To Array
 	 *
-	 * @param array $ancestors Array of ancestors to add to.
-	 * @param int $item_id Menu item ID.
-	 * @return array Menu item ancestor IDs.
+	 * @param   array  $ancestors  Array of ancestors to add to.
+	 * @param   int    $item_id    Menu item ID.
+	 * @return  array              Menu item ancestor IDs.
 	 */
 	static function _add_menu_item_ancestors_to_array( $ancestors, $item_id ) {
 		return array_merge( $ancestors, ExtraClasses::_get_menu_item_ancestor_ids( $item_id ) );
@@ -180,13 +184,14 @@ class ExtraClasses {
 	/**
 	 * Get Menu Item Ancestor IDs
 	 *
-	 * @param int $item_id Menu item ID.
-	 * @param array $ancestors Array of ancestors to populate (add to).
-	 * @return array Menu item ancestor IDs.
+	 * @param   int    $item_id    Menu item ID.
+	 * @param   array  $ancestors  Array of ancestors to populate (add to).
+	 * @return  array              Menu item ancestor IDs.
 	 */
 	static function _get_menu_item_ancestor_ids( $item_id, $ancestors = null ) {
-		if ( ! is_array( $ancestors ) )
+		if ( ! is_array( $ancestors ) ) {
 			$ancestors = array();
+		}
 
 		$parent = get_post_meta( $item_id, '_menu_item_menu_item_parent', true );
 		while ( $parent != 0 ) {
