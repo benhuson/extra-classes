@@ -38,6 +38,7 @@ class ExtraClasses {
 	 */
     function __construct() {
 		include_once( EXTRACLASSES_DIR . 'modules/body.php' );
+		include_once( EXTRACLASSES_DIR . 'modules/menu.php' );
 		add_filter( 'wp_nav_menu_objects', array( $this, 'wp_nav_menu_objects' ), 5, 2 );
 	}
 
