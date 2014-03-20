@@ -196,6 +196,45 @@ class ExtraClasses {
 		return $ancestors;
 	}
 
+	/**
+	 * Get Post Types
+	 *
+	 * Returns an array of post types.
+	 *
+	 * @return  array  Post types.
+	 */
+	static function get_post_types() {
+		$post_types = get_post_types();
+		return array_keys( $post_types );
+	}
+
+	/**
+	 * Get Taxonomies
+	 *
+	 * Returns an array of taxonomies.
+	 *
+	 * @return  array  Taxonomies.
+	 */
+	static function get_taxonomies() {
+		$taxonomies = get_taxonomies( array(
+			'public' => true
+		) );
+		return array_keys( $taxonomies );
+	}
+
+	/**
+	 * Is Post Type Single
+	 *
+	 * @param   string   $post_type  Post type name.
+	 * @return  boolean
+	 */
+	static function is_post_type_single( $post_type ) {
+		if ( is_single() && $post_type = get_post_type() ) {
+			return true;
+		}
+		return false;
+	}
+
 }
 
 global $extra_classes;
