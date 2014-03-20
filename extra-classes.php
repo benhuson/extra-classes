@@ -27,21 +27,18 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+define( 'EXTRACLASSES_SUBDIR', '/' . str_replace( basename( __FILE__ ), '', plugin_basename( __FILE__ ) ) );
+define( 'EXTRACLASSES_URL', plugins_url( EXTRACLASSES_SUBDIR ) );
+define( 'EXTRACLASSES_DIR', plugin_dir_path( __FILE__ ) );
+
 class ExtraClasses {
 
 	/**
 	 * Constructor
 	 */
     function __construct() {
-		//add_filter( 'body_class', array( $this, 'body_classes' ) );
+		include_once( EXTRACLASSES_DIR . 'modules/body.php' );
 		add_filter( 'wp_nav_menu_objects', array( $this, 'wp_nav_menu_objects' ), 5, 2 );
-	}
-
-	/**
-	 * Body Classes
-	 */
-	function body_classes( $classes ) {
-		return $classes;
 	}
 
 	/**
