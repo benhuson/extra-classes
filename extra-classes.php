@@ -31,15 +31,14 @@ define( 'EXTRACLASSES_SUBDIR', '/' . str_replace( basename( __FILE__ ), '', plug
 define( 'EXTRACLASSES_URL', plugins_url( EXTRACLASSES_SUBDIR ) );
 define( 'EXTRACLASSES_DIR', plugin_dir_path( __FILE__ ) );
 
+add_action( 'plugins_loaded', array( 'ExtraClasses', 'plugins_loaded' ) );
+
 class ExtraClasses {
 
-	/**
-	 * Constructor
-	 */
-    function __construct() {
+	static function plugins_loaded() {
 		include_once( EXTRACLASSES_DIR . 'modules/body.php' );
 		include_once( EXTRACLASSES_DIR . 'modules/menu.php' );
-		add_filter( 'wp_nav_menu_objects', array( $this, 'wp_nav_menu_objects' ), 5, 2 );
+		add_filter( 'wp_nav_menu_objects', array( 'ExtraClasses', 'wp_nav_menu_objects' ), 5, 2 );
 	}
 
 	/**
@@ -52,11 +51,11 @@ class ExtraClasses {
 	 * @param array $args Array of arguments.
 	 * @return array Sorted menu items.
 	 */
-	function wp_nav_menu_objects( $sorted_menu_items, $args ) {
+	static function wp_nav_menu_objects( $sorted_menu_items, $args ) {
 		global $post;
 
-		$sorted_menu_items = $this->_single_post_menu_item_filters( $sorted_menu_items );
-		$sorted_menu_items = $this->_attachment_page_menu_item_filters( $sorted_menu_items );
+		$sorted_menu_items = ExtraClasses::_single_post_menu_item_filters( $sorted_menu_items );
+		$sorted_menu_items = ExtraClasses::_attachment_page_menu_item_filters( $sorted_menu_items );
 
 		return $sorted_menu_items;
 	}
@@ -67,7 +66,7 @@ class ExtraClasses {
 	 * @param array $sorted_menu_items Menu items.
 	 * @return array Filtered menu items.
 	 */
-	function _single_post_menu_item_filters( $sorted_menu_items ) {
+	static function _single_post_menu_item_filters( $sorted_menu_items ) {
 		global $post;
 
 		if ( is_single() && ! is_attachment() ) {
@@ -76,13 +75,13 @@ class ExtraClasses {
 			foreach ( $sorted_menu_items as $key => $val ) {
 				if ( $val->type == 'taxonomy' && has_term( $val->object_id, $val->object, $post->ID ) ) {
 					$classes = array( 'current-page-ancestor', 'current_page_ancestor', 'current-page-parent', 'current_page_parent', 'current-menu-ancestor', 'current-menu-parent' );
-					$sorted_menu_items[$key] = $this->_add_classes_to_menu_item( $classes, $sorted_menu_items[$key] );
+					$sorted_menu_items[$key] = ExtraClasses::_add_classes_to_menu_item( $classes, $sorted_menu_items[$key] );
 
 					// Term Ancestors
 					$term_ancestors[$val->object] = get_ancestors( $val->object_id, $val->object );
 
 					// Menu Item Ancestors
-					$menu_item_ancestors = $this->_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
+					$menu_item_ancestors = ExtraClasses::_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
 				}
 			}
 			foreach ( $sorted_menu_items as $key => $val ) {
@@ -90,16 +89,16 @@ class ExtraClasses {
 					foreach ( $term_ancestors as $tax => $t ) {
 						if ( in_array( $val->object_id, $t ) && $val->object == $tax ) {
 							$classes = array( 'current-page-ancestor', 'current_page_ancestor' );
-							$sorted_menu_items[$key] = $this->_add_classes_to_menu_item( $classes, $sorted_menu_items[$key] );
+							$sorted_menu_items[$key] = ExtraClasses::_add_classes_to_menu_item( $classes, $sorted_menu_items[$key] );
 
 							// Menu Item Ancestors
-							$menu_item_ancestors = $this->_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
+							$menu_item_ancestors = ExtraClasses::_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
 						}
 					}
 				
 				}
 			}
-			$sorted_menu_items = $this->_add_classes_to_menu_items( 'current-menu-ancestor', $sorted_menu_items, $menu_item_ancestors );
+			$sorted_menu_items = ExtraClasses::_add_classes_to_menu_items( 'current-menu-ancestor', $sorted_menu_items, $menu_item_ancestors );
 		}
 		return $sorted_menu_items;
 	}
@@ -110,7 +109,7 @@ class ExtraClasses {
 	 * @param array $sorted_menu_items Menu items.
 	 * @return array Filtered menu items.
 	 */
-	function _attachment_page_menu_item_filters( $sorted_menu_items ) {
+	static function _attachment_page_menu_item_filters( $sorted_menu_items ) {
 		global $post;
 
 		if ( is_attachment() && $post->post_parent > 0 ) {
@@ -122,13 +121,13 @@ class ExtraClasses {
 					if ( $post->post_parent == $val->object_id ) {
 						$classes = array_merge( $classes, array( 'current-page-parent', 'current_page_parent', 'current-menu-ancestor', 'current-menu-parent' ) );
 					}
-					$sorted_menu_items[$key] = $this->_add_classes_to_menu_item( $classes, $sorted_menu_items[$key] );
+					$sorted_menu_items[$key] = ExtraClasses::_add_classes_to_menu_item( $classes, $sorted_menu_items[$key] );
 
 					// Menu Item Ancestors
-					$menu_item_ancestors = $this->_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
+					$menu_item_ancestors = ExtraClasses::_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
 				}
 			}
-			$sorted_menu_items = $this->_add_classes_to_menu_items( 'current-menu-ancestor', $sorted_menu_items, $menu_item_ancestors );
+			$sorted_menu_items = ExtraClasses::_add_classes_to_menu_items( 'current-menu-ancestor', $sorted_menu_items, $menu_item_ancestors );
 		}
 		return $sorted_menu_items;
 	}
@@ -140,7 +139,7 @@ class ExtraClasses {
 	 * @param object $menu_item Menu item object.
 	 * @return object Menu item.
 	 */
-	function _add_classes_to_menu_item( $classes, $menu_item ) {
+	static function _add_classes_to_menu_item( $classes, $menu_item ) {
 		if ( is_array( $classes ) ) {
 			$menu_item->classes = array_merge( $menu_item->classes, $classes );
 		} else {
@@ -158,10 +157,10 @@ class ExtraClasses {
 	 * @param array $menu_ids Menu item ids to which the class will be added.
 	 * @return array Menu items.
 	 */
-	function _add_classes_to_menu_items( $classes, $menu_items, $menu_ids ) {
+	static function _add_classes_to_menu_items( $classes, $menu_items, $menu_ids ) {
 		foreach ( $menu_items as $key => $val ) {
 			if ( in_array( $val->ID, $menu_ids ) ) {
-				$menu_items[$key] = $this->_add_classes_to_menu_item( $classes, $menu_items[$key] );
+				$menu_items[$key] = ExtraClasses::_add_classes_to_menu_item( $classes, $menu_items[$key] );
 			}
 		}
 		return $menu_items;
@@ -174,8 +173,8 @@ class ExtraClasses {
 	 * @param int $item_id Menu item ID.
 	 * @return array Menu item ancestor IDs.
 	 */
-	function _add_menu_item_ancestors_to_array( $ancestors, $item_id ) {
-		return array_merge( $ancestors, $this->_get_menu_item_ancestor_ids( $item_id ) );
+	static function _add_menu_item_ancestors_to_array( $ancestors, $item_id ) {
+		return array_merge( $ancestors, ExtraClasses::_get_menu_item_ancestor_ids( $item_id ) );
 	}
 
 	/**
@@ -185,7 +184,7 @@ class ExtraClasses {
 	 * @param array $ancestors Array of ancestors to populate (add to).
 	 * @return array Menu item ancestor IDs.
 	 */
-	function _get_menu_item_ancestor_ids( $item_id, $ancestors = null ) {
+	static function _get_menu_item_ancestor_ids( $item_id, $ancestors = null ) {
 		if ( ! is_array( $ancestors ) )
 			$ancestors = array();
 
@@ -237,6 +236,3 @@ class ExtraClasses {
 	}
 
 }
-
-global $extra_classes;
-$extra_classes = new ExtraClasses();
