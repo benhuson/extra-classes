@@ -4,7 +4,7 @@
 Plugin Name: Extra Classes
 Plugin URI: https://github.com/benhuson/extra-classes
 Description: Adds missing classes for selected menu states such as highlighting categories when viewing a blog post or parent page when you're on an attachment page.
-Version: 0.1
+Version: 0.2
 Author: Ben Huson
 Author URI: https://github.com/benhuson
 License: GPL2
