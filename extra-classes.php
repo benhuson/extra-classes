@@ -3,7 +3,7 @@
 /*
 Plugin Name: Extra Classes
 Plugin URI: https://github.com/benhuson/extra-classes
-Description: Adds missing classes for selected menu states such as highlighting categories when viewing a blog post or parent page when you're on an attachment page.
+Description: Adds missing classes for selected menu states such as highlighting categories when viewing a blog post or parent page when you're on an attachment page. Also add `magic` classes to menu items to highlight them in certain contexts.
 Version: 0.2
 Author: Ben Huson
 Author URI: https://github.com/benhuson
@@ -33,6 +33,9 @@ define( 'EXTRACLASSES_DIR', plugin_dir_path( __FILE__ ) );
 
 add_action( 'plugins_loaded', array( 'ExtraClasses', 'plugins_loaded' ) );
 
+/**
+ * Extra Classes Class
+ */
 class ExtraClasses {
 
 	/**
