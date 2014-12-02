@@ -40,7 +40,6 @@ class ExtraClasses {
 	 */
 	static function plugins_loaded() {
 		include_once( EXTRACLASSES_DIR . 'modules/body.php' );
-		include_once( EXTRACLASSES_DIR . 'modules/menu.php' );
 		include_once( EXTRACLASSES_DIR . 'modules/menu-selector.php' );
 		add_filter( 'wp_nav_menu_objects', array( 'ExtraClasses', 'wp_nav_menu_objects' ), 5, 2 );
 	}
