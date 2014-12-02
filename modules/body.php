@@ -10,8 +10,10 @@ class ExtraClasses_Body {
 	 * @param   array  $classes  Body classes.
 	 * @return  array            Classes.
 	 */
-	static function body_class( $classes ) {
+	public static function body_class( $classes ) {
+
 		return $classes;
+
 	}
 
 }

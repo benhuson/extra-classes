@@ -38,10 +38,15 @@ class ExtraClasses {
 	/**
 	 * Plugins Loaded
 	 */
-	static function plugins_loaded() {
+	public static function plugins_loaded() {
+
+		// Load modules
 		include_once( EXTRACLASSES_DIR . 'modules/body.php' );
 		include_once( EXTRACLASSES_DIR . 'modules/menu-selector.php' );
+
+		// Filter menu items
 		add_filter( 'wp_nav_menu_objects', array( 'ExtraClasses', 'wp_nav_menu_objects' ), 5, 2 );
+
 	}
 
 	/**
@@ -55,13 +60,15 @@ class ExtraClasses {
 	 * @param   array  $args               Array of arguments.
 	 * @return  array                      Sorted menu items.
 	 */
-	static function wp_nav_menu_objects( $sorted_menu_items, $args ) {
+	public static function wp_nav_menu_objects( $sorted_menu_items, $args ) {
+
 		global $post;
 
 		$sorted_menu_items = ExtraClasses::_single_post_menu_item_filters( $sorted_menu_items );
 		$sorted_menu_items = ExtraClasses::_attachment_page_menu_item_filters( $sorted_menu_items );
 
 		return $sorted_menu_items;
+
 	}
 
 	/**
@@ -70,12 +77,15 @@ class ExtraClasses {
 	 * @param   array  $sorted_menu_items  Menu items.
 	 * @return  array                      Filtered menu items.
 	 */
-	static function _single_post_menu_item_filters( $sorted_menu_items ) {
+	public static function _single_post_menu_item_filters( $sorted_menu_items ) {
+
 		global $post;
 
 		if ( is_single() && ! is_attachment() ) {
+
 			$term_ancestors = array();
 			$menu_item_ancestors = array();
+
 			foreach ( $sorted_menu_items as $key => $val ) {
 				if ( $val->type == 'taxonomy' && has_term( $val->object_id, $val->object, $post->ID ) ) {
 					$classes = array( 'current-page-ancestor', 'current_page_ancestor', 'current-page-parent', 'current_page_parent', 'current-menu-ancestor', 'current-menu-parent' );
@@ -86,8 +96,10 @@ class ExtraClasses {
 
 					// Menu Item Ancestors
 					$menu_item_ancestors = ExtraClasses::_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
+
 				}
 			}
+
 			foreach ( $sorted_menu_items as $key => $val ) {
 				if ( $val->type == 'taxonomy' ) {
 					foreach ( $term_ancestors as $tax => $t ) {
@@ -97,14 +109,19 @@ class ExtraClasses {
 
 							// Menu Item Ancestors
 							$menu_item_ancestors = ExtraClasses::_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
+
 						}
 					}
 				
 				}
 			}
+
 			$sorted_menu_items = ExtraClasses::_add_classes_to_menu_items( 'current-menu-ancestor', $sorted_menu_items, $menu_item_ancestors );
+
 		}
+
 		return $sorted_menu_items;
+
 	}
 
 	/**
@@ -113,7 +130,8 @@ class ExtraClasses {
 	 * @param   array  $sorted_menu_items  Menu items.
 	 * @return  array                      Filtered menu items.
 	 */
-	static function _attachment_page_menu_item_filters( $sorted_menu_items ) {
+	public static function _attachment_page_menu_item_filters( $sorted_menu_items ) {
+
 		global $post;
 
 		if ( is_attachment() && $post->post_parent > 0 ) {
@@ -129,11 +147,14 @@ class ExtraClasses {
 
 					// Menu Item Ancestors
 					$menu_item_ancestors = ExtraClasses::_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
+
 				}
 			}
 			$sorted_menu_items = ExtraClasses::_add_classes_to_menu_items( 'current-menu-ancestor', $sorted_menu_items, $menu_item_ancestors );
 		}
+
 		return $sorted_menu_items;
+
 	}
 
 	/**
@@ -143,14 +164,18 @@ class ExtraClasses {
 	 * @param   object        $menu_item  Menu item object.
 	 * @return  object                    Menu item.
 	 */
-	static function _add_classes_to_menu_item( $classes, $menu_item ) {
+	public static function _add_classes_to_menu_item( $classes, $menu_item ) {
+
 		if ( is_array( $classes ) ) {
 			$menu_item->classes = array_merge( $menu_item->classes, $classes );
 		} else {
 			$menu_item->classes[] = $classes;
 		}
+
 		$menu_item->classes = array_unique( $menu_item->classes );
+
 		return $menu_item;
+
 	}
 
 	/**
@@ -161,13 +186,16 @@ class ExtraClasses {
 	 * @param   array        $menu_ids    Menu item ids to which the class will be added.
 	 * @return  array                     Menu items.
 	 */
-	static function _add_classes_to_menu_items( $classes, $menu_items, $menu_ids ) {
+	public static function _add_classes_to_menu_items( $classes, $menu_items, $menu_ids ) {
+
 		foreach ( $menu_items as $key => $val ) {
 			if ( in_array( $val->ID, $menu_ids ) ) {
 				$menu_items[ $key ] = ExtraClasses::_add_classes_to_menu_item( $classes, $menu_items[ $key ] );
 			}
 		}
+
 		return $menu_items;
+
 	}
 
 	/**
@@ -177,8 +205,10 @@ class ExtraClasses {
 	 * @param   int    $item_id    Menu item ID.
 	 * @return  array              Menu item ancestor IDs.
 	 */
-	static function _add_menu_item_ancestors_to_array( $ancestors, $item_id ) {
+	public static function _add_menu_item_ancestors_to_array( $ancestors, $item_id ) {
+
 		return array_merge( $ancestors, ExtraClasses::_get_menu_item_ancestor_ids( $item_id ) );
+
 	}
 
 	/**
@@ -188,17 +218,21 @@ class ExtraClasses {
 	 * @param   array  $ancestors  Array of ancestors to populate (add to).
 	 * @return  array              Menu item ancestor IDs.
 	 */
-	static function _get_menu_item_ancestor_ids( $item_id, $ancestors = null ) {
+	public static function _get_menu_item_ancestor_ids( $item_id, $ancestors = null ) {
+
 		if ( ! is_array( $ancestors ) ) {
 			$ancestors = array();
 		}
 
 		$parent = get_post_meta( $item_id, '_menu_item_menu_item_parent', true );
+
 		while ( $parent != 0 ) {
 			$ancestors[] = $parent;
 			$parent = get_post_meta( $parent, '_menu_item_menu_item_parent', true );
 		}
+
 		return $ancestors;
+
 	}
 
 	/**
@@ -208,9 +242,12 @@ class ExtraClasses {
 	 *
 	 * @return  array  Post types.
 	 */
-	static function get_post_types() {
+	public static function get_post_types() {
+
 		$post_types = get_post_types();
+
 		return array_keys( $post_types );
+
 	}
 
 	/**
@@ -220,11 +257,14 @@ class ExtraClasses {
 	 *
 	 * @return  array  Taxonomies.
 	 */
-	static function get_taxonomies() {
+	public static function get_taxonomies() {
+
 		$taxonomies = get_taxonomies( array(
 			'public' => true
 		) );
+
 		return array_keys( $taxonomies );
+
 	}
 
 	/**
@@ -233,11 +273,14 @@ class ExtraClasses {
 	 * @param   string   $post_type  Post type name.
 	 * @return  boolean
 	 */
-	static function is_post_type_single( $post_type ) {
+	public static function is_post_type_single( $post_type ) {
+
 		if ( is_single() && $post_type = get_post_type() ) {
 			return true;
 		}
+
 		return false;
+
 	}
 
 }
