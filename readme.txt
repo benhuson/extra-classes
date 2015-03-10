@@ -3,7 +3,7 @@ Contributors: husobj
 Tags: styles, css, class, classes, menu, menus, nav, navigation, selected
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 0.2
+Stable tag: 0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,11 +33,13 @@ Allows you to control which menu items should be selected (or deselected) when v
  * `ecms-single-{$post_type}` - Select menu item when viewing a single post type page.
  * `ecms-taxonomy-{$taxonomy}` - Select menu item when viewing a taxonomy archive.
  * `ecms-taxonomy-{$taxonomy}-term-{$term}` - Select menu item when viewing a taxonomy term archive.
+ * `ecms-404` - Select menu item when viewing a 404 page.
 
  * `ecms-no-archive-{$post_type}` - Deselect menu item when viewing a post type archive page.
  * `ecms-no-single-{$post_type}` - Deselect menu item when viewing a single post type page.
  * `ecms-no-taxonomy-{$taxonomy}` - Deselect menu item when viewing a taxonomy archive.
  * `ecms-no-taxonomy-{$taxonomy}-term-{$term}` - Deselect menu item when viewing a taxonomy term archive.
+ * `ecms-no-404` - Deselect menu item when viewing a 404 page.
 
 == Installation ==
 
@@ -66,6 +68,9 @@ None at present.
 
 == Changelog ==
 
+= 0.3 =
+Added Menu Selector support for 'ecms-404' and 'ecms-no-404' classes.
+
 = 0.2 =
 Added Menu Selector class.
 Add menus module and 'extraclasses_menu_item_class' filter for easier filtering of menu item classes.
@@ -75,6 +80,9 @@ Restructure include files for modules.
 First release (beta).
 
 == Upgrade Notice ==
+
+= 0.3 =
+Added Menu Selector support for 'ecms-404' and 'ecms-no-404' classes.
 
 = 0.2 =
 Added Menu Selector class and 'extraclasses_menu_item_class' filter.
