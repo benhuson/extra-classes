@@ -3,7 +3,7 @@ Contributors: husobj
 Tags: styles, css, class, classes, menu, menus, nav, navigation, selected
 Requires at least: 3.7
 Tested up to: 4.1
-Stable tag: 0.3
+Stable tag: 0.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,9 @@ If you can, please [fork the code](https://github.com/benhuson/extra-classes) an
 None at present.
 
 == Changelog ==
+
+= 0.3.1 =
+Fix issue where menu selected states were not inherited correctly for non-404 pages.
 
 = 0.3 =
 Added Menu Selector support for 'ecms-404' and 'ecms-no-404' classes.
