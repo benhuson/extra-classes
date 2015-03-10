@@ -11,11 +11,13 @@
  * - ecms-single-{$post_type}                  : Select menu item when viewing a single post type page.
  * - ecms-taxonomy-{$taxonomy}                 : Select menu item when viewing a taxonomy archive.
  * - ecms-taxonomy-{$taxonomy}-term-{$term}    : Select menu item when viewing a taxonomy term archive.
+ * - ecms-404                                  : Select menu item when viewing a 404 page.
  * 
  * - ecms-no-archive-{$post_type}              : Deselect menu item when viewing a post type archive page.
  * - ecms-no-single-{$post_type}               : Deselect menu item when viewing a single post type page.
  * - ecms-no-taxonomy-{$taxonomy}              : Deselect menu item when viewing a taxonomy archive.
  * - ecms-no-taxonomy-{$taxonomy}-term-{$term} : Deselect menu item when viewing a taxonomy term archive.
+ * - ecms-no-404                               : Deselect menu item when viewing a 404 page.
  */
 
 add_action( 'wp', array( 'ExtraClasses_Menu_Selector', 'setup_inbuilt_states' ) );
@@ -50,12 +52,14 @@ class ExtraClasses_Menu_Selector {
 		self::register_selected_state( 'ecms-single-%%$post_type%%' );
 		self::register_selected_state( 'ecms-taxonomy-%%$taxonomy%%' );
 		self::register_selected_state( 'ecms-taxonomy-%%$taxonomy%%-term-%%term%%' );
+		self::register_selected_state( 'ecms-404' );
 
 		// Deselected States
 		self::register_deselected_state( 'ecms-no-archive-%%$post_type%%' );
 		self::register_deselected_state( 'ecms-no-single-%%$post_type%%' );
 		self::register_deselected_state( 'ecms-no-taxonomy-%%$taxonomy%%' );
 		self::register_deselected_state( 'ecms-no-taxonomy-%%$taxonomy%%-term-%%term%%' );
+		self::register_deselected_state( 'ecms-no-404' );
 
 	}
 
@@ -195,6 +199,11 @@ class ExtraClasses_Menu_Selector {
 
 			}
 
+		}
+
+		// 404
+		if ( ! is_404() && in_array( $state, array( 'ecms-404', 'ecms-no-404' ) ) ) {
+			return '';
 		}
 
 		// If only one state, needs to return an array
