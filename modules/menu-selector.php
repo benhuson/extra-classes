@@ -203,7 +203,7 @@ class ExtraClasses_Menu_Selector {
 
 		// 404
 		if ( ! is_404() && in_array( $state, array( 'ecms-404', 'ecms-no-404' ) ) ) {
-			return '';
+			$state = '';
 		}
 
 		// If only one state, needs to return an array
