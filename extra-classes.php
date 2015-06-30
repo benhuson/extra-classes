@@ -90,7 +90,10 @@ class ExtraClasses {
 			$menu_item_ancestors = array();
 
 			foreach ( $sorted_menu_items as $key => $val ) {
-				if ( $val->type == 'taxonomy' && has_term( $val->object_id, $val->object, $post->ID ) ) {
+
+				$has_term = apply_filters( 'extraclasses_has_term', has_term( $val->object_id, $val->object, $post->ID ), $val->object_id, $val->object, $post->ID );
+
+				if ( $val->type == 'taxonomy' && $has_term ) {
 					$classes = array( 'current-page-ancestor', 'current_page_ancestor', 'current-page-parent', 'current_page_parent', 'current-menu-ancestor', 'current-menu-parent' );
 					$sorted_menu_items[ $key ] = self::_add_classes_to_menu_item( $classes, $sorted_menu_items[ $key ] );
 
