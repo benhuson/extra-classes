@@ -134,6 +134,8 @@ class ExtraClasses_Menu_Selector {
 	 */
 	public static function format_current_state( $state ) {
 
+		global $wp_query;
+
 		// Get the main queried object
 		$qo = get_queried_object();
 
@@ -144,7 +146,7 @@ class ExtraClasses_Menu_Selector {
 			if ( is_a( $qo, 'WP_Post' ) || is_post_type_archive() ) {
 
 				// Find and replace post type
-				$post_type = is_post_type_archive() ? get_post_type() : get_post_type( $qo );
+				$post_type = is_post_type_archive() ? $wp_query->query['post_type'] : get_post_type( $qo );
 				$state = str_replace( '%%post_type%%', $post_type, $state );
 
 			} else {
