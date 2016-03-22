@@ -141,22 +141,38 @@ class ExtraClasses {
 		global $post;
 
 		if ( is_attachment() && $post->post_parent > 0 ) {
-			$post_ancestors = get_post_ancestors( $post->ID );
-			$menu_item_ancestors = array();
-			foreach ( $sorted_menu_items as $key => $val ) {
-				if ( $val->type == 'post_type' && in_array( $val->object_id, $post_ancestors ) ) {
-					$classes = array( 'current-page-ancestor', 'current_page_ancestor' );
-					if ( $post->post_parent == $val->object_id ) {
-						$classes = array_merge( $classes, array( 'current-page-parent', 'current_page_parent', 'current-menu-ancestor', 'current-menu-parent' ) );
+
+			// Post Attachment
+			if ( 'post' == get_post_type( $post->post_parent ) ) {
+
+				foreach ( $sorted_menu_items as $key => $val ) {
+					if ( $val->type == 'post_type' && $val->object == 'page' && $val->object_id == get_option( 'page_for_posts' ) ) {
+						$classes = array( 'current-menu-ancestor', 'current-page-ancestor' );
+						$sorted_menu_items[$key] = self::_add_classes_to_menu_item( $classes, $sorted_menu_items[ $key ] );
 					}
-					$sorted_menu_items[$key] = self::_add_classes_to_menu_item( $classes, $sorted_menu_items[ $key ] );
-
-					// Menu Item Ancestors
-					$menu_item_ancestors = self::_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
-
 				}
+
+			} else {
+
+				$post_ancestors = get_post_ancestors( $post->ID );
+				$menu_item_ancestors = array();
+				foreach ( $sorted_menu_items as $key => $val ) {
+					if ( $val->type == 'post_type' && in_array( $val->object_id, $post_ancestors ) ) {
+						$classes = array( 'current-page-ancestor', 'current_page_ancestor' );
+						if ( $post->post_parent == $val->object_id ) {
+							$classes = array_merge( $classes, array( 'current-page-parent', 'current_page_parent', 'current-menu-ancestor', 'current-menu-parent' ) );
+						}
+						$sorted_menu_items[$key] = self::_add_classes_to_menu_item( $classes, $sorted_menu_items[ $key ] );
+
+						// Menu Item Ancestors
+						$menu_item_ancestors = self::_add_menu_item_ancestors_to_array( $menu_item_ancestors, $val->ID );
+
+					}
+				}
+				$sorted_menu_items = self::_add_classes_to_menu_items( 'current-menu-ancestor', $sorted_menu_items, $menu_item_ancestors );
+
 			}
-			$sorted_menu_items = self::_add_classes_to_menu_items( 'current-menu-ancestor', $sorted_menu_items, $menu_item_ancestors );
+
 		}
 
 		return $sorted_menu_items;
